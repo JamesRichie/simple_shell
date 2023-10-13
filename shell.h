@@ -13,6 +13,8 @@ void printx(const char *c);
 void _prompt(void);
 void execute(const char *input);
 void read_cmd(char *input, size_t size);
+int _getline(char *input, int size);
+
 
 
 #endif
