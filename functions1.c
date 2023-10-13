@@ -1,42 +1,37 @@
 #include "shell.h"
 /**
- * execute - executes a command based on it's type
- * @tokenized_cmd: tokenized form of the command (ls -l == {ls, -l, NULL})
- * @cmd_type: type of the command
+ * execute - executes a command 
+ * @input: Imnput by user
  *
  * Return: void
  */
-void execute(char **tokenized_cmd, int cmd_type)
+void execute(const char *input)
 {
-	void (*funct)(char **command);
+	pid_t c_pid = fork();
 
-	if (cmd_type == EXT_COMMAND)
+	if (c_pid == -1)
 	{
-		if (execve(tokenized_cmd[0], tokenized_cmd, NULL) == -1)
+		perror("Fork");
+		exit(EXIT_FAILURE);
+	}
+	else if (c_pid == 0)
+	{
+		char *args[150];
+		int args_count = 0;
+
+		char *tkn = strtok((char *)input, " ");
+
+		while (tkn != NULL)
 		{
-			perror(_getenv("PWD"));
-			exit(2);
+			args[args_count++] = tkn;
+			tkn = strtok(NULL, " ");
 		}
+		args[args_count] = NULL;
+
+		execvp(args[0], args);
+		perror("execlp");
+		exit(EXIT_FAILURE);
 	}
-	if (cmd_type == PATH_COMMAND)
-	{
-		if (execve(check_path(tokenized_cmd[0]), tokenized_cmd, NULL) == -1)
-		{
-			perror(_getenv("PWD"));
-			exit(2);
-		}
-	}
-	if (cmd_type == INT_COMMAND)
-	{
-		funct = get_func(tokenized_cmd[0]);
-		funct(tokenized_cmd);
-	}
-	if (cmd_type == INVALID_COMMAND)
-	{
-		printx(shell_name, STDERR_FILENO);
-		printx(": 1: ", STDERR_FILENO);
-		printx(tokenized_cmd[0], STDERR_FILENO);
-		printx(": not found here\n", STDERR_FILENO);
-		status = 125;
-	}
+	else
+		wait(NULL);
 }

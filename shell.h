@@ -8,4 +8,11 @@
 #include <sys/wait.h>
 
 
+/* Function */
+void printx(const char *c);
+void _prompt(void);
+void execute(const char *input);
+void read_cmd(char *input, size_t size);
+
+
 #endif
