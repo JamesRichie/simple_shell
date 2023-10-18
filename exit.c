@@ -1,62 +1,141 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+#include "shell.h"
 
-#define MAX_INPUT_SIZE 1024
-#define MAX_ARGS 100
 
-// Function to split a string into an array of tokens
-void tokenizeInput(char *input, char **args) {
-    char *token = strtok(input, " \t\n");
-    int i = 0;
+/**
 
-    while (token != NULL) {
-        args[i] = token;
-        token = strtok(NULL, " \t\n");
-        i++;
-    }
-    args[i] = NULL;
+ **_strncpy - copies a string
+
+ *@dest: the destination string to be copied to
+
+ *@src: the source string
+
+ *@n: the amount of characters to be copied
+
+ *Return: the concatenated string
+
+ */
+
+char *_strncpy(char *dest, char *src, int n)
+
+{
+
+        int i, j;
+
+        char *s = dest;
+
+
+        i = 0;
+
+        while (src[i] != '\0' && i < n - 1)
+
+        {
+
+                dest[i] = src[i];
+
+                i++;
+
+        }
+
+        if (i < n)
+
+        {
+
+                j = i;
+
+                while (j < n)
+
+                {
+
+                        dest[j] = '\0';
+
+                        j++;
+
+                }
+
+        }
+
+        return (s);
+
 }
 
-int main() {
-    char input[MAX_INPUT_SIZE];
-    char *args[MAX_ARGS];
 
-    while (1) {
-        printf("SimpleShell > ");
-        fflush(stdout);
+/**
 
-        if (fgets(input, sizeof(input), stdin) == NULL) {
-            break;
+ **_strncat - concatenates two strings
+
+ *@dest: the first string
+
+ *@src: the second string
+
+ *@n: the amount of bytes to be maximally used
+
+ *Return: the concatenated string
+
+ */
+
+char *_strncat(char *dest, char *src, int n)
+
+{
+
+        int i, j;
+
+        char *s = dest;
+
+
+        i = 0;
+
+        j = 0;
+
+        while (dest[i] != '\0')
+
+                i++;
+
+        while (src[j] != '\0' && j < n)
+
+        {
+
+                dest[i] = src[j];
+
+                i++;
+
+                j++;
+
         }
 
-        // Remove the newline character
-        input[strcspn(input, "\n")] = '\0';
+        if (j < n)
 
-        if (strcmp(input, "exit") == 0) {
-            printf("Exiting the shell.\n");
-            break;
-        }
+                dest[i] = '\0';
 
-        pid_t pid = fork();
+        return (s);
 
-        if (pid < 0) {
-            perror("Fork failed");
-            exit(1);
-        } else if (pid == 0) { // Child process
-            tokenizeInput(input, args);
-            if (execvp(args[0], args) == -1) {
-                perror("Command not found");
-                exit(1);
-            }
-        } else { // Parent process
-            int status;
-            waitpid(pid, &status, 0);
-        }
-    }
+}
 
-    return 0;
+
+/**
+
+ **_strchr - locates a character in a string
+
+ *@s: the string to be parsed
+
+ *@c: the character to look for
+
+ *Return: (s) a pointer to the memory area s
+
+ */
+
+char *_strchr(char *s, char c)
+
+{
+
+        do {
+
+                if (*s == c)
+
+                        return (s);
+
+        } while (*s++ != '\0');
+
+
+        return (NULL);
+
 }
