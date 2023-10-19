@@ -16,5 +16,8 @@ void read_cmd(char *input, size_t size);
 int _getline(char *input, int size);
 
 
+int snake_case(const char *str);
+int valid_id(const char *str);
+
 
 #endif
